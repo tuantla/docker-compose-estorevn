@@ -1,0 +1,55 @@
+version: '3'
+services:
+  api-server:
+   image: indexing/estore-service:latest
+   hostname: api
+   domainname: lab.java
+   ports:
+    - "8085:8084"
+   environment:
+   - ENV=lab
+   networks:
+    estore:
+      aliases:
+      - api.lab.java
+  memcached:
+    hostname: memcached
+    domainname: lab.java
+    image: "memcached:alpine"
+    networks:
+      estore:
+        aliases:
+          - memcached.lab.java
+  solr:
+    hostname: solr
+    domainname: lab.java
+    image: "indexing/solr:e5b6368-dirty"
+    networks:
+      estore:
+        aliases:
+          - solr.lab.java
+  qpid:
+    hostname: qpid
+    domainname: lab.java
+    image: "indexing/qpid"
+    networks:
+      estore:
+        aliases:
+          - qpid.lab.java
+  db:
+    hostname: db
+    domainname: lab.java
+    image: "mysql:5.7"
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    environment:
+     - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    volumes:
+      - ./data/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      estore:
+        aliases:
+          - db.lab.java
+
+networks:
+ estore:
+

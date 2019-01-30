@@ -1,5 +1,5 @@
 version: '3'
-services:
+services:  
   api-server:
    image: indexing/estore-service:latest
    hostname: api
@@ -49,6 +49,16 @@ services:
       estore:
         aliases:
           - db.lab.java
+  web-server:
+   image: indexing/estore-webapp:latest
+   hostname: web
+   domainname: lab.java   
+   environment:
+   - ENV=lab
+   networks:
+    estore:
+      aliases:
+      - web.lab.java
   lb:
     hostname: lb
     domainname: lab.java

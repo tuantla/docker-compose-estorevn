@@ -60,10 +60,13 @@ services:
       aliases:
       - web.lab.java
   lb:
-    hostname: lb
+    hostname: lb   
     domainname: lab.java
     image: "haproxy:1.9-alpine"
     command: ['haproxy', '-f', '/lb/haproxy.cfg']
+    ports:
+    - "80:80"
+    - "443:443" 
     volumes:
       - ./data/lb:/lb
     networks:

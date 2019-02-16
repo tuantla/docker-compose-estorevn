@@ -70,6 +70,7 @@ services:
     - "443:443" 
     volumes:
       - ./data/lb:/lb
+      - ./data/ssl:/ssl
     networks:
       estore:
         aliases:

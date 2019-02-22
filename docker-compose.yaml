@@ -28,6 +28,8 @@ services:
       estore:
         aliases:
           - solr.lab.java
+    volumes:
+    - ./data/solr-data:/var/lib/solr/data      
   qpid:
     hostname: qpid
     domainname: lab.java

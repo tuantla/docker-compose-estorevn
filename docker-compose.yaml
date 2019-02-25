@@ -3,44 +3,42 @@ services:
   api-server:
    image: docker.io/indexing/estore-service:latest
    hostname: api
-   domainname: lab.java
-   ports:
-    - "8085:8084"
+   domainname: prod.java   
    environment:
-   - ENV=lab
+   - ENV=prd
    networks:
     estore:
       aliases:
-      - api.lab.java
+      - api.prod.java
   memcached:
     hostname: memcached
-    domainname: lab.java
+    domainname: prod.java
     image: "docker.io/memcached:alpine"
     networks:
       estore:
         aliases:
-          - memcached.lab.java
+          - memcached.prod.java
   solr:
     hostname: solr
-    domainname: lab.java
+    domainname: prod.java
     image: "docker.io/indexing/solr:e5b6368-dirty"
     networks:
       estore:
         aliases:
-          - solr.lab.java
+          - solr.prod.java
     volumes:
     - ./data/solr-data:/var/lib/solr/data      
   qpid:
     hostname: qpid
-    domainname: lab.java
+    domainname: prod.java
     image: "docker.io/indexing/qpid"
     networks:
       estore:
         aliases:
-          - qpid.lab.java
+          - qpid.prod.java
   db:
     hostname: db
-    domainname: lab.java
+    domainname: prod.java
     image: "docker.io/mysql:5.7"
     command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     environment:
@@ -51,31 +49,29 @@ services:
     networks:
       estore:
         aliases:
-          - db.lab.java
+          - db.prod.java
   web-server:
    image: docker.io/indexing/estore-webapp:latest
    hostname: web
-   domainname: lab.java   
+   domainname: prod.java   
    environment:
-   - ENV=lab
+   - ENV=prd
    networks:
     estore:
       aliases:
-      - web.lab.java
+      - web.prod.java
   lb:
     hostname: lb   
-    domainname: lab.java
+    domainname: prod.java
     image: "haproxy:1.9-alpine"
-    command: ['haproxy', '-f', '/lb/haproxy.cfg']
-    ports:
-    - "8080:8080"     
+    command: ['haproxy', '-f', '/lb/haproxy.cfg']    
     volumes:
       - ./data/lb:/lb
       - ./data/ssl:/ssl
     networks:
       estore:
         aliases:
-          - lb.lab.java
+          - lb.prod.java
 networks:
  estore: 
   driver: bridge

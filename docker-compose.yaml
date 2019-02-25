@@ -77,5 +77,6 @@ services:
         aliases:
           - lb.lab.java
 networks:
- estore:
+ estore: 
+  driver: bridge
 

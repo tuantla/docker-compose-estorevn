@@ -1,11 +1,11 @@
 version: '3'
-services:  
+services:
   api-server:
-   image: docker.io/indexing/estore-service:latest
+   image: docker.io/indexing/estore-service:20190227-1525
    hostname: api
-   domainname: prod.java   
+   domainname: prod.java
    environment:
-   - ENV=prd
+   - ENV=prod
    networks:
     estore:
       aliases:
@@ -27,7 +27,7 @@ services:
         aliases:
           - solr.prod.java
     volumes:
-    - ./data/solr-data:/var/lib/solr/data      
+    - ./data/solr-data:/var/lib/solr/data
   qpid:
     hostname: qpid
     domainname: prod.java
@@ -45,26 +45,26 @@ services:
      - MYSQL_ALLOW_EMPTY_PASSWORD=true
     volumes:
       - ./data/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - ./data/mysql:/var/lib/mysql      
+      - ./data/mysql:/var/lib/mysql
     networks:
       estore:
         aliases:
           - db.prod.java
   web-server:
-   image: docker.io/indexing/estore-webapp:latest
+   image: docker.io/indexing/estore-webapp:20190227-1525
    hostname: web
-   domainname: prod.java   
+   domainname: prod.java
    environment:
-   - ENV=prd
+   - ENV=prod
    networks:
     estore:
       aliases:
       - web.prod.java
   lb:
-    hostname: lb   
+    hostname: lb
     domainname: prod.java
     image: "haproxy:1.9-alpine"
-    command: ['haproxy', '-f', '/lb/haproxy.cfg']    
+    command: ['haproxy', '-f', '/lb/haproxy.cfg']
     volumes:
       - ./data/lb:/lb
       - ./data/ssl:/ssl
@@ -73,6 +73,6 @@ services:
         aliases:
           - lb.prod.java
 networks:
- estore: 
+ estore:
   driver: bridge
 

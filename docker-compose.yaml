@@ -1,7 +1,7 @@
 version: '3'
 services:
   api-server:
-   image: docker.io/indexing/estore-service:20190423-0934
+   image: docker.io/indexing/estore-service:20190423-1137
    hostname: api
    domainname: prod.java
    environment:
@@ -51,7 +51,7 @@ services:
         aliases:
           - db.prod.java
   web-server:
-   image: docker.io/indexing/estore-webapp:20190423-0934
+   image: docker.io/indexing/estore-webapp:20190423-1137
    hostname: web
    domainname: prod.java
    environment:

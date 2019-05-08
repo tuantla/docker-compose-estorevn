@@ -51,7 +51,7 @@ services:
         aliases:
           - db.prod.java
   web-server:
-   image: docker.io/indexing/estore-webapp:20190508-2241
+   image: docker.io/indexing/estore-webapp:20190508-2328
    hostname: web
    domainname: prod.java
    environment:

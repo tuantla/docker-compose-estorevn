@@ -21,7 +21,6 @@ services:
     interval: 5s
     timeout: 10s
     retries: 3
-    start_period: 10s
   memcached:
     hostname: memcached
     domainname: lab.java

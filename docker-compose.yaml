@@ -63,7 +63,7 @@ services:
    - ENV=prod
    networks:
     estore:
-    ipv4_address: 172.20.0.9
+      ipv4_address: 172.20.0.9
       aliases:
       - web.prod.java
   lb:
@@ -76,7 +76,7 @@ services:
       - ./data/ssl:/ssl
     networks:
       estore:
-      ipv4_address: 172.20.0.10
+        ipv4_address: 172.20.0.10
         aliases:
           - lb.prod.java
 networks:

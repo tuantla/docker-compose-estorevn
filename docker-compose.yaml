@@ -8,6 +8,7 @@ services:
    - ENV=prod
    networks:
     estore:
+      ipv4_address: 172.20.0.4
       aliases:
       - api.prod.java
   memcached:
@@ -16,6 +17,7 @@ services:
     image: "docker.io/memcached:alpine"
     networks:
       estore:
+        ipv4_address: 172.20.0.5
         aliases:
           - memcached.prod.java
   solr:
@@ -24,6 +26,7 @@ services:
     image: "docker.io/indexing/solr:e5b6368-dirty"
     networks:
       estore:
+        ipv4_address: 172.20.0.6
         aliases:
           - solr.prod.java
     volumes:
@@ -34,6 +37,7 @@ services:
     image: "docker.io/indexing/qpid"
     networks:
       estore:
+        ipv4_address: 172.20.0.7
         aliases:
           - qpid.prod.java
   db:
@@ -48,6 +52,7 @@ services:
       - ./data/mysql:/var/lib/mysql
     networks:
       estore:
+        ipv4_address: 172.20.0.8
         aliases:
           - db.prod.java
   web-server:
@@ -58,6 +63,7 @@ services:
    - ENV=prod
    networks:
     estore:
+    ipv4_address: 172.20.0.9
       aliases:
       - web.prod.java
   lb:
@@ -70,9 +76,13 @@ services:
       - ./data/ssl:/ssl
     networks:
       estore:
+      ipv4_address: 172.20.0.10
         aliases:
           - lb.prod.java
 networks:
  estore:
   driver: bridge
+  ipam:
+    config:
+      - subnet: 172.20.0.0/24      
 

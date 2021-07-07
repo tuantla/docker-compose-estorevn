@@ -1,7 +1,7 @@
 version: '3'
-services:  
+services:
   api-server:
-   image: indexing/estore-service:latest
+   image: docker.io/indexing/estore-service:latest
    hostname: api
    domainname: lab.java
    ports:
@@ -12,10 +12,19 @@ services:
     estore:
       aliases:
       - api.lab.java
+   depends_on:
+    - memcached
+    - qpid
+    - solr
+   healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:8084/api/internal/users/version"]
+    interval: 5s
+    timeout: 10s
+    retries: 3
   memcached:
     hostname: memcached
     domainname: lab.java
-    image: "memcached:alpine"
+    image: "docker.io/memcached:alpine"
     networks:
       estore:
         aliases:
@@ -23,15 +32,19 @@ services:
   solr:
     hostname: solr
     domainname: lab.java
-    image: "indexing/solr:e5b6368-dirty"
+    image: "docker.io/indexing/solr:e5b6368-dirty"
     networks:
       estore:
         aliases:
           - solr.lab.java
+    volumes:
+    - ./data/solr-data:/var/lib/solr/data
+    depends_on:
+    - db
   qpid:
     hostname: qpid
     domainname: lab.java
-    image: "indexing/qpid"
+    image: "docker.io/indexing/qpid"
     networks:
       estore:
         aliases:
@@ -39,37 +52,44 @@ services:
   db:
     hostname: db
     domainname: lab.java
-    image: "mysql:5.7"
+    image: "docker.io/mysql:5.7"
     command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     environment:
      - MYSQL_ALLOW_EMPTY_PASSWORD=true
     volumes:
       - ./data/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./data/mysql:/var/lib/mysql
     networks:
       estore:
         aliases:
           - db.lab.java
   web-server:
-   image: indexing/estore-webapp:latest
+   image: docker.io/indexing/estore-webapp:latest
    hostname: web
-   domainname: lab.java   
+   domainname: lab.java
    environment:
    - ENV=lab
    networks:
     estore:
       aliases:
       - web.lab.java
+   depends_on:
+    - api-server
   lb:
     hostname: lb
     domainname: lab.java
     image: "haproxy:1.9-alpine"
     command: ['haproxy', '-f', '/lb/haproxy.cfg']
+    ports:
+    - "8080:8080"
     volumes:
       - ./data/lb:/lb
+      - ./data/ssl:/ssl
     networks:
       estore:
         aliases:
           - lb.lab.java
 networks:
  estore:
+  driver: bridge
 
